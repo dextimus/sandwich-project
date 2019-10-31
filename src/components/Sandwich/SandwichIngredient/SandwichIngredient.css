@@ -1,0 +1,46 @@
+.Bread {
+  height: 15%;
+  width: 80%;
+  background: linear-gradient(#e98629, #e29f60) ;
+  border-radius: 5px;
+  box-shadow: inset -15px 0 #c7820c;
+  margin: 1% auto;
+  position: relative;
+}
+
+.Meat {
+  height: 5%;
+  width: 78%;
+  background: #6e0f0f;
+  border-radius: 15px;
+  margin: 1% auto;
+}
+
+.Bacon {
+  height: 2%;
+  width: 90%;
+  background: #911c1c;
+  margin: 1% auto;
+}
+
+.Cheese {
+  height: 3%;
+  width: 80%;
+  background: #ffbb00;
+  border-radius: 3px;
+  margin: 1% auto;
+}
+
+.Salad {
+  height: 2%;
+  width: 85%;
+  background: #13bb13;
+  margin: 1% auto;
+}
+
+.Tomato {
+    height: 3%;
+    width: 70%;
+    background: #b61623;
+    margin: 1% auto;
+}
