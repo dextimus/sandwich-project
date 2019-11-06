@@ -6,11 +6,11 @@ import SandwichBuilder from "./containers/SandwichBuilder/SandwichBuilder";
 class App extends Component {
   render() {
     return (
-      <Layout>
-        <div>
+      <div>
+        <Layout>
           <SandwichBuilder />
-        </div>
-      </Layout>
+        </Layout>
+      </div>
     );
   }
 }
