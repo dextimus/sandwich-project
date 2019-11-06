@@ -18,18 +18,24 @@ const ingredientPrices = {
 
 class SandwichBuider extends Component {
   state = {
-    ingredients: {
-      salad: 0,
-      tomato: 0,
-      bacon: 0,
-      cheese: 0,
-      meat: 0
-    },
+    ingredients: null,
     totalPrice: 1.5,
     purchasable: false,
     purchasing: false,
-    loading: false
+    loading: false,
+    error: false
   };
+
+  componentDidMount() {
+    axios
+      .get("https://sandwich-project-ab4d4.firebaseio.com/ingredients.json")
+      .then(response => {
+        this.setState({ ingredients: response.data });
+      })
+      .catch(error => {
+        this.setState({ error: true });
+      });
+  }
 
   updatePurchase(ingredients) {
     const sum = Object.keys(ingredients)
@@ -117,14 +123,32 @@ class SandwichBuider extends Component {
       disabledInfo[key] = disabledInfo[key] <= 0;
     }
 
-    let orderSummary = (
-      <OrderSummary
-        ingredients={this.state.ingredients}
-        fullPrice={this.state.totalPrice.toFixed(2)}
-        purchaseCancelled={this.purchaseCancelHandler}
-        purchaseContinued={this.purchaseContinue}
-      />
-    );
+    let orderSummary = null;
+    let sandwich = this.state.error ? <p>Ingredients cannot be loaded!</p> : <Spinner />;
+
+    if (this.state.ingredients) {
+      sandwich = (
+        <Aux>
+          <Sandwich ingredients={this.state.ingredients} />
+          <BuildControls
+            ingredientAdded={this.addIngredient}
+            ingredientRemoved={this.removeIngredient}
+            disabled={disabledInfo}
+            purchasable={this.state.purchasable}
+            ordered={this.purchaseHandler}
+            price={this.state.totalPrice.toFixed(2)}
+          />
+        </Aux>
+      );
+      orderSummary = (
+        <OrderSummary
+          ingredients={this.state.ingredients}
+          fullPrice={this.state.totalPrice.toFixed(2)}
+          purchaseCancelled={this.purchaseCancelHandler}
+          purchaseContinued={this.purchaseContinue}
+        />
+      );
+    }
     if (this.state.loading) {
       orderSummary = <Spinner />;
     }
@@ -137,15 +161,7 @@ class SandwichBuider extends Component {
         >
           {orderSummary}
         </Modal>
-        <Sandwich ingredients={this.state.ingredients} />
-        <BuildControls
-          ingredientAdded={this.addIngredient}
-          ingredientRemoved={this.removeIngredient}
-          disabled={disabledInfo}
-          purchasable={this.state.purchasable}
-          ordered={this.purchaseHandler}
-          price={this.state.totalPrice.toFixed(2)}
-        />
+        {sandwich}
       </Aux>
     );
   }
