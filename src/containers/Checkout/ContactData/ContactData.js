@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import Button from "../../../components/UI/Button/Button";
 import classes from "./ContactData.css";
 import axios from "../../../axios";
@@ -46,7 +47,7 @@ class ContactData extends Component {
         validation: {
           required: true,
           minLength: 4,
-          maxLength: 5,
+          maxLength: 5
         },
         valid: false,
         touched: false
@@ -102,7 +103,7 @@ class ContactData extends Component {
       formData[formElIdentifier] = this.state.orderForm[formElIdentifier].value;
     }
     const order = {
-      ingredients: this.props.ingredients,
+      ingredients: this.props.ings,
       price: this.props.price,
       orderData: formData
     };
@@ -128,9 +129,7 @@ class ContactData extends Component {
     if (rules.maxLength) {
       isValid = value.length <= rules.maxLength && isValid;
     }
-    if (isNaN(this.state.orderForm.postalCode.value)) (
-      isValid = false
-    )
+    if (isNaN(this.state.orderForm.postalCode.value)) isValid = false;
     return isValid;
   }
 
@@ -151,7 +150,7 @@ class ContactData extends Component {
 
     let formIsValid = true;
     for (let inputIdentifier in updatedOrderForm) {
-      formIsValid = updatedOrderForm[inputIdentifier].valid && formIsValid
+      formIsValid = updatedOrderForm[inputIdentifier].valid && formIsValid;
     }
     this.setState({ orderForm: updatedOrderForm, formIsValid: formIsValid });
   };
@@ -177,7 +176,9 @@ class ContactData extends Component {
             touched={el.config.touched}
           />
         ))}
-        <Button btnType="Success" disabled={!this.state.formIsValid}>ORDER</Button>
+        <Button btnType="Success" disabled={!this.state.formIsValid}>
+          ORDER
+        </Button>
       </form>
     );
     if (this.state.loading) {
@@ -192,4 +193,11 @@ class ContactData extends Component {
   }
 }
 
-export default ContactData;
+const mapStateToProps = state => {
+  return {
+    ings: state.ingredients,
+    price: state.totalPrice
+  };
+};
+
+export default connect(mapStateToProps)(ContactData);
